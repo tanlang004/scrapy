@@ -22,7 +22,7 @@ class JablePipeline:
             f"N_m3u8DL-RE",
             url,
             "--thread-count",
-            "66",
+            "333",
             "--save-dir",
             f"{DOWNLODS_PATH}/downloads",
             "--tmp-dir",
@@ -30,7 +30,7 @@ class JablePipeline:
         ]
         process = await asyncio.create_subprocess_exec(*args, stdout=None, stderr=None)
         await process.wait()
-        print(f"结束下载了 {url}")
+        print(f"\n结束下载了 {url}")
         endtime = time.perf_counter()
         print(f"下载耗时 {endtime - start_time}")
         if process.returncode != 0:
@@ -42,7 +42,7 @@ class JablePipeline:
 class UploadPipeLines:
     async def process_item(self, item, spider):
         url = item["url"]
-        print(f"开始上传了 {url}")
+        print(f"\n开始上传了 {url}")
         start_time = time.perf_counter()
 
         await asyncio.sleep(2)

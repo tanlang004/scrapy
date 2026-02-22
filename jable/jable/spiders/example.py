@@ -2,25 +2,26 @@ import scrapy
 from scrapy.http import Response
 import re
 from jable.items import JableItem
-base_url = "https://jable.tv/hot/?mode=async&function=get_block&block_id=list_videos_common_videos_list&sort_by=video_viewed&from="
+base_url = "https://missavt.com/sort/month_hot/"
 
 
 class ExampleSpider(scrapy.Spider):
     name = "jable"
     # allowed_domains = ["example.com"]
-    start_urls = [f"{base_url}{i}" for i in range(1, 2)]
+    start_urls = [base_url]
 
     def parse(self, response: Response):
         # print(response.text)
         txt = response.text
-        data = response.xpath('//*[@class="img-box cover-md"]//a/@href').getall()
+        data = response.xpath('//*[@class="video-item"]/a/div[1]/@data-url').getall()
         print(data)
         print(len(data))
-        data = [data[0]]
         for detail in data:
-            yield scrapy.Request(detail, self.detailParse)
+            item = JableItem()
+            item['url'] = detail
+            yield item
 
-    def detailParse(self, response: Response):
+    
         # print(response.url)
         txt = response.text
                 # 调整后的正则：捕获hlsUrl变量里的完整URL（从https到.m3u8结尾）
