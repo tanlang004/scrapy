@@ -1,3 +1,25 @@
 {
-    "python-envs.pythonProjects": []
+  // ==================== Python插件核心配置 ====================
+
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python", // 新版VS Code推荐
+
+  // 启用LSP（语言服务器），提升代码提示/检查能力
+  "python.languageServer": "Pylance",
+
+  // ==================== Black格式化插件配置 ====================
+  // 保存文件时自动格式化（核心）
+  "editor.formatOnSave": true,
+  // 只对Python文件启用保存格式化（可选，避免影响其他语言）
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.black-formatter" // 指定Black为Python默认格式化器
+  },
+
+
+  // 可选：开启代码自动修复（如缺少导入、变量未定义提示）
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "error",
+    "reportUndefinedVariable": "error"
+  }
 }

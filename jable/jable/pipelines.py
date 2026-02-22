@@ -12,6 +12,7 @@ from pathlib import Path
 
 DOWNLODS_PATH = Path.home().absolute()
 
+
 class JablePipeline:
     async def process_item(self, item, spider):
         url = item["url"]
@@ -27,9 +28,7 @@ class JablePipeline:
             "--tmp-dir",
             f"{DOWNLODS_PATH}/tmps",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *args, stdout=None, stderr=None
-        )
+        process = await asyncio.create_subprocess_exec(*args, stdout=None, stderr=None)
         await process.wait()
         print(f"结束下载了 {url}")
         endtime = time.perf_counter()
@@ -39,6 +38,7 @@ class JablePipeline:
 
         return item
 
+
 class UploadPipeLines:
     async def process_item(self, item, spider):
         url = item["url"]
@@ -46,7 +46,6 @@ class UploadPipeLines:
         start_time = time.perf_counter()
 
         await asyncio.sleep(2)
-        
 
         print(f"结束上传了 {url}")
         endtime = time.perf_counter()
