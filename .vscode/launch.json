@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // 配置1：调试指定的单个Scrapy爬虫（最常用）
+        {
+            "name": "Scrapy: 调试指定爬虫",
+            "type": "debugpy",
+            "request": "launch",
+            // 关键：指定Scrapy的cmdline.py作为启动入口（固定路径，根据Python环境调整）
+            "program": "/home/good/scrapy/.venv/bin/scrapy", // 虚拟环境（Linux/Mac）
+            // Windows虚拟环境替换为："${env:VIRTUAL_ENV}/Scripts/scrapy.exe"
+            // 全局Python替换为："${command:python.interpreterPath}"（自动识别当前Python解释器）
+            // 爬虫参数：crawl + 爬虫名 + 自定义参数（可按需修改）
+            "args": [
+                "crawl",
+                "jable", // 替换为你的爬虫名（如douban、baidu）
+            ],
+            // 项目根目录（关键：必须指向Scrapy项目的根目录，即包含scrapy.cfg的目录）
+            "cwd": "${workspaceFolder}/jable",
+           
+            // 自动停止在第一行（可选，新手建议开启）
+            "stopOnEntry": false,
+            // 显示控制台输出
+            "console": "integratedTerminal",
+            // 调试时自动加载环境变量
+            "justMyCode": false
+        },
+    ]
+}

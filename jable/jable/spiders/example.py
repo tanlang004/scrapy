@@ -16,6 +16,7 @@ class ExampleSpider(scrapy.Spider):
         data = response.xpath('//*[@class="video-item"]/a/div[1]/@data-url').getall()
         print(data)
         print(len(data))
+        data = [data[0]]
         for detail in data:
             item = JableItem()
             item['url'] = detail
