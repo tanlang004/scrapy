@@ -8,6 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = "jable"
+TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
 SPIDER_MODULES = ["jable.spiders"]
 NEWSPIDER_MODULE = "jable.spiders"
