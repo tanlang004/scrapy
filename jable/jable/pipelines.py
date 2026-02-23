@@ -12,6 +12,8 @@ from pathlib import Path
 import httpx
 import os
 from typing import Optional
+import urllib
+import aiofiles
 
 DOWNLODS_PATH = Path.home().absolute()
 
@@ -25,8 +27,8 @@ OPEN_LIST_UPLOAD_URL = OPEN_LIST_BASE_URL + "api/fs/put"
 OPENLIST_URL = "https://5244.xiaodu1234.xyz"  # 你的OpenList部署地址（无末尾/）
 USERNAME = "admin"  # OpenList登录账号
 PASSWORD = "123321"  # OpenList登录密码
-LOCAL_VIDEO_PATH = f"{DOWNLODS_PATH}/downloads/02f0b2d4731158d97e7c9b65dd1087f9_2026-02-22_15-45-13.mp4"  # 本地视频文件路径
-OPENLIST_TARGET_PATH = "/天翼云盘/02f0b2d4731158d97e7c9b65dd1087f9_2026-02-22_15-45-13.mp4"  # OpenList目标路径（官方要求path头格式）
+LOCAL_VIDEO_PATH = f"{DOWNLODS_PATH}/downloads/b664f7f5a71443d7d709862b2e5b4056_2026-02-23_12-20-42.mp4"  # 本地视频文件路径
+OPENLIST_TARGET_PATH = "/天翼云盘/b664f7f5a71443d7d709862b2e5b4056_2026-02-23_12-20-42.mp4"  # OpenList目标路径（官方要求path头格式）
 # ---------------------------------------------------------------------------------
 
 
@@ -46,7 +48,7 @@ async def get_openlist_bearer_token_async(
             res = await client.post(login_url, json=payload)  # 异步请求加await
             res.raise_for_status()
             result = res.json()
-            if result.get("success") and result.get("data", {}).get("token"):
+            if result.get("message") and result.get("data", {}).get("token"):
                 token = result["data"]["token"]
                 print(f"✅ 异步登录成功，Bearer Token：{token[:20]}...")
                 return f"Bearer {token}"
@@ -75,7 +77,7 @@ async def upload_video_by_official_api_async(
     # 构造官方要求的请求头（和同步版一致）
     headers = {
         "Authorization": bearer_token,
-        "path": target_path,
+        "path": urllib.parse.quote(target_path),
         "As-Task": str(as_task).lower(),  # 必须小写true/false
     }
     # 可选：设置文件修改时间（毫秒级Unix时间戳）
@@ -94,7 +96,7 @@ async def upload_video_by_official_api_async(
         # 异步客户端 + 异步文件读取（核心）
         async with httpx.AsyncClient(timeout=3000) as client:  # 大文件超时设5分钟
             # 以二进制流方式异步读取文件（边读边发，不占内存）
-            with open(local_file_path, "rb") as f:
+            async with aiofiles.open(local_file_path, "rb") as f:
                 # 异步PUT请求：content传文件句柄，自动流式发送
                 res = await client.put(url=upload_url, headers=headers, content=f)
                 res.raise_for_status()
